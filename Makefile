@@ -27,6 +27,10 @@ organelle_m : CXXFLAGS += -DCM3GPIO_HW -DMICSEL_SWITCH -DPWR_SWITCH -DOLED_30FPS
 organelle_m : $(objects) hw_interfaces/CM3GPIO.o
 	$(CXX) -l wiringPi -o fw_dir/mother $(objects) hw_interfaces/CM3GPIO.o
 
+barbonelle : CXXFLAGS += -DCM3GPIO_HW -DPWR_SWITCH   -DFIX_ABL_LINK
+barbonelle : $(objects) hw_interfaces/CM3GPIO.o hw_interfaces/ssd1306_i2c.o
+	$(CXX) -l wiringPi -o fw_dir/mother $(objects) hw_interfaces/CM3GPIO.o hw_interfaces/ssd1306_i2c.o
+
 .PHONY : clean
 
 clean :
@@ -69,6 +73,27 @@ organelle_m_deploy : organelle_m
 	cp -fr --preserve=mode,ownership tmp/rootfs/* /
 	rm -fr tmp
 	sync
+
+barbonelle_deploy : barbonelle
+	@echo "Updating OS to $(IMAGE_VERSION)"
+	@echo "copying common fw files"
+	rm -fr /home/music/fw_dir
+	mkdir /home/music/fw_dir
+	cp -fr fw_dir/* /home/music/fw_dir
+	@echo "copying platform fw files"
+	cp -fr platforms/organelle_m/fw_dir/* /home/music/fw_dir
+	chown -R music:music /home/music/fw_dir
+	@echo "copying version file to root for backwards compatiblility"
+	cp -fr fw_dir/version /root
+	@echo "copying systems files"
+	mkdir tmp
+	cp -r platforms/organelle_m/rootfs tmp/
+	chown -R root:root tmp/rootfs
+	chown -R music:music tmp/rootfs/home/music
+	cp -fr --preserve=mode,ownership tmp/rootfs/* /
+	rm -fr tmp
+	sync
+
 
 # Generate with g++ -MM *.c* OSC/*.* 
 AppData.o: AppData.cpp AppData.h OledScreen.h

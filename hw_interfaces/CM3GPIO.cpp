@@ -1,4 +1,5 @@
 #include "CM3GPIO.h"
+#include "ssd1306_i2c.h"
 
 // for the OLED
 #define SSD1306_LCDHEIGHT                 64
@@ -105,7 +106,7 @@ void CM3GPIO::init(){
     wiringPiSetupGpio();
 
     // GPIO for shift registers
-    pinMode(SR_PLOAD, OUTPUT);
+/*    pinMode(SR_PLOAD, OUTPUT);
     pinMode(SR_CLOCK_ENABLE, OUTPUT);
     pinMode(SR_CLOCK, OUTPUT);
     pinMode(SR_DATA, INPUT);
@@ -143,7 +144,8 @@ void CM3GPIO::init(){
     digitalWrite(LEDR, HIGH);
     digitalWrite(LEDG, HIGH);
     digitalWrite(LEDB, HIGH);
-
+*/
+    ssd1306_begin(SSD1306_SWITCHCAPVCC, SSD1306_I2C_ADDRESS);
     // GPIO for power status 
     pinMode(PWR_STATUS, INPUT);
     pullUpDnControl(PWR_STATUS, PUD_OFF);
@@ -196,7 +198,7 @@ void CM3GPIO::pollKnobs(){
 
     static uint32_t battAvg = 0;
     static uint8_t num = 0;
-    
+    /*
     adcs[0] = adcRead(0);
     adcs[1] = adcRead(1);
     adcs[2] = adcRead(2);
@@ -232,19 +234,21 @@ void CM3GPIO::pollKnobs(){
             if (batteryVoltage < LOW_BATTERY_SHUTDOWN_THRESHOLD) lowBatteryShutdown = true;
         }
     }
-
+*/
     knobFlag = 1;
+
 }
 
 void CM3GPIO::updateOLED(OledScreen &s){
-    // spi will overwrite the buffer with input, so we need a tmp
-    uint8_t tmp[1024];
+  /*   uint8_t tmp[1024];
     memcpy(tmp, s.pix_buf, 1024);
     
     digitalWrite(OLED_DC, LOW);
     wiringPiSPIDataRW(0, oled_poscode, 3);
     digitalWrite(OLED_DC, HIGH);
     wiringPiSPIDataRW(0, tmp, 1024);
+    */
+    ssd1306_display(s.pix_buf);
 }
 
 
@@ -311,7 +315,7 @@ uint32_t CM3GPIO::shiftRegRead(void)
     // so far best way to do the bit banging reliably is to
     // repeat the calls to reduce output clock frequency, like ad hoc 'nop' instructions
     // delay functions no good for such small times
-
+/*
     // load
     digitalWrite(SR_PLOAD, LOW);
     digitalWrite(SR_PLOAD, LOW);
@@ -356,14 +360,14 @@ uint32_t CM3GPIO::shiftRegRead(void)
         digitalWrite(SR_CLOCK, LOW);
         digitalWrite(SR_CLOCK, LOW);
     }
-    
+    */
     pinValues = bytesVal;
     return(bytesVal);
 }
 
 void CM3GPIO::getKeys(void){
     keyStates = 0;
-    
+    /*
     keyStates |= (pinValues >> (0 + 7) & 1) << 24;
     keyStates |= (pinValues >> (1 + 7) & 1) << 16;
     keyStates |= (pinValues >> (2 + 7) & 1) << 17;
@@ -393,7 +397,7 @@ void CM3GPIO::getKeys(void){
     
     keyStates |= (pinValues >> (24 + 7) & 1) << 7;
     
-    keyStates |= (0xFE000000);  // zero out the bits not key bits
+    */
     keyStates = ~keyStates;
 }
 
@@ -462,6 +466,7 @@ void CM3GPIO::getEncoder(void){
 
 uint32_t CM3GPIO::adcRead(uint8_t adcnum)
 { 
+    /*
     unsigned int commandout = 0;
 
     // read a channel from the MCP3008 ADC
@@ -477,6 +482,7 @@ uint32_t CM3GPIO::adcRead(uint8_t adcnum)
     wiringPiSPIDataRW(1, spibuf, 3);    
 
     return ((spibuf[1] << 8) | (spibuf[2])) >> 4;
+    */ return 0;
     
 }
 
