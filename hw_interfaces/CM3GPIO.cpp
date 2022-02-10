@@ -58,6 +58,7 @@
 #define BATTERY_BAR_0 4.15
 #define LOW_BATTERY_SHUTDOWN_THRESHOLD 4.0
 
+
 // OLED init bytes
 static unsigned char oled_initcode[] = {
 	// Initialisation sequence
@@ -101,6 +102,10 @@ static unsigned char oled_poscode[] = {
 CM3GPIO::CM3GPIO() {
 }
 
+#define ENCODER_DT  6
+#define ENCODER_CLK  7
+#define ENCODER_BTN  5
+
 void CM3GPIO::init(){
     // setup GPIO, this uses actual BCM pin numbers 
     wiringPiSetupGpio();
@@ -132,7 +137,7 @@ void CM3GPIO::init(){
     // initialize OLED
     digitalWrite(OLED_DC, LOW);
     wiringPiSPIDataRW(0, oled_initcode, 28);
-
+*/
     // GPIO for LEDs
     pinMode(LEDR, OUTPUT);
     pinMode(LEDG, OUTPUT);
@@ -144,13 +149,24 @@ void CM3GPIO::init(){
     digitalWrite(LEDR, HIGH);
     digitalWrite(LEDG, HIGH);
     digitalWrite(LEDB, HIGH);
-*/
+
+    //encoder
+    pinMode(ENCODER_BTN, INPUT);
+    pinMode(ENCODER_DT, INPUT);
+    pinMode(ENCODER_CLK, INPUT);
+    pullUpDnControl(ENCODER_BTN, PUD_UP);
+    pullUpDnControl(ENCODER_DT, PUD_UP);
+    pullUpDnControl(ENCODER_CLK, PUD_UP);
+
+
     ssd1306_begin(SSD1306_SWITCHCAPVCC, SSD1306_I2C_ADDRESS);
+    /*
     // GPIO for power status 
     pinMode(PWR_STATUS, INPUT);
     pullUpDnControl(PWR_STATUS, PUD_OFF);
     pwrStatus = digitalRead(PWR_STATUS);
-
+*/
+    pwrStatus = 0; // simula "alimentatore"
     // keys
     keyStatesLast = 0;
     clearFlags();
@@ -164,6 +180,15 @@ void CM3GPIO::init(){
     batteryVoltage = 5;
     batteryBars = 5;
     lowBatteryShutdown = false;
+}
+
+
+uint32_t readEncoder()
+{
+	int rv = digitalRead(ENCODER_BTN) ? 0x10 : 0;
+	rv +=  digitalRead(ENCODER_DT) ? 0x20 : 0;
+	rv +=  digitalRead(ENCODER_CLK) ? 0x40 : 0;
+	return rv;
 }
 
 void CM3GPIO::clearFlags() {
@@ -190,6 +215,7 @@ void CM3GPIO::poll(){
     micSelSwitch = (pinValues >> 3) & 1;
     
     // check encoder, gotta check every time for debounce purposes
+    pinValues = readEncoder();
     getEncoder();
     
 }

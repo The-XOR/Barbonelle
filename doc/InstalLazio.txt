@@ -1,30 +1,50 @@
 
 # ORGANELLE_OS_RasPi
 
+Connettore espansione pisound:
+pin 9 (BCM27) -> Led Blu
+pin 7 (BCM22) -> Led verde
+pin 8 (BCM23) -> led Rosso
+Il comune del led va a +5V (viene accesso da pin LOW)
+
+pin 5 (BCM5) -> encoder Button
+pin 6 (BCM6) -> encoder DT
+pin 3 (BCM7) -> encoder CLK
+Il positivo dell'encoder va alimentato a 3.3V
+
 The operating system for the BARBONELLE synthesizer device - remixed for barbons
 
 Il pulsante PiSound e' su GPIO 17 (Pin 11, Wiring Pi pin 0).
 
-### Installation :
+########### Installazione da barboni ###########
 
-Scaricare raspbian con deskotoppo
--Localization: timezone, keyboard, wifi
+Scaricare raspbian con lite
+PRIMA (e sottolineo il PRIMA) di inzepparlo del raspoberro:
+
+   sudo nano /run/media/io/rootfs/usr/lib/raspi-config/init_resize.h
+   cambiare la linea
+      ROOT_DEV_SIZE=$(cat "/sys/block/${ROOT_DEV_NAME}/size")
+   in
+      ROOT_DEV_SIZE=9437184
+quindi... procedere. Questo fara' in modo che la partizione root sia di circa 4 gigaspazi.
+Una volta che il raspoberro ha resizato a dovere la partizione root, arimettere la sdcard nel PC
+e creare una ulteriore partizione ext4 utilizzando tutto lo spazio rimasto nella SD.
 
 sudo raspi-config: 
 - configurare WLAN
 - Change password: music
-- startup: autologin, console
 - Network > Hostname: barbonelle
 - abilitare SSH
+. Locale: en US UTF8-UTF8
 
 --- Exit, Reboot
                                      
 relogin (attenzione: ora la password è music)
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get upgrade -y
 sudo reboot
 
-* change user name: music
+creare utente "music":
 
 1  `sudo passwd root`  --> cambiare la password in "root" (!)
 2. logout, login as root
@@ -38,14 +58,9 @@ disable need for passwd with sudo:
 sudo passwd -l root
 sudo nano /etc/sudoers.d/010_pi-nopasswd
 change 'pi' to 'music'
+- con raspi-config, abilitare console autologin
 poweroff
 
-
-A questo punto, con partition manager RIPARTIZIONARE la sdcard creando una terza partizione:
-/boot (part 1)
-/rootfs (part 2)
-/ <---- Nuova partizione (part 3), dove verranno memorizzati tutti i preset
-Per fare ciò, la sticca usba NON deve essere montata (tasto destro/Unmount DA DENTRO PARTITION MANAGER)
 
 
 git clone https://github.com/The-XOR/ORGANELLE_OS.git --depth=1

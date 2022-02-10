@@ -7,7 +7,7 @@ fw_dir = os.getenv("FW_DIR")
 
 GPIO.setmode(GPIO.BCM)
 
-GPIO.setup(13, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 time.sleep(1)
 
