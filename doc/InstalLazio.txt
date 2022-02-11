@@ -31,11 +31,17 @@ Una volta che il raspoberro ha resizato a dovere la partizione root, arimettere 
 e creare una ulteriore partizione ext4 utilizzando tutto lo spazio rimasto nella SD.
 
 sudo raspi-config: 
-- configurare WLAN
-- Change password: music
-- Network > Hostname: barbonelle
-- abilitare SSH
-. Locale: en US UTF8-UTF8
+  1. System Options:
+    - configurare WLAN
+    - Change password: music
+    - Network > Hostname: barbonelle
+    - Disable wait for network at boot
+  3. Interface Options:
+    - abilitare SSH
+  5. Localization Options
+.   - Locale: en US UTF8-UTF8
+    - Timezone
+    - WLAN Country
 
 --- Exit, Reboot
                                      
@@ -61,9 +67,16 @@ change 'pi' to 'music'
 - con raspi-config, abilitare console autologin
 poweroff
 
+install git
 
+    apt-get install git
 
-git clone https://github.com/The-XOR/ORGANELLE_OS.git --depth=1
+configure
+
+    git config --global user.email "..."
+    git config --global user.name "..."
+
+git clone https://github.com/The-XOR/BARBONELLE.git --depth=1
 cd ORGANELLE_OS
 
 Note - EYESY is looking for your sound card to be the "default" device.
