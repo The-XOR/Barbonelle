@@ -183,9 +183,9 @@ void CM3GPIO::init(){
 }
 
 
-uint32_t readEncoder()
+uint32_t CM3GPIO::readEncoder()
 {
-	int rv = digitalRead(ENCODER_BTN) ? 0x10 : 0;
+	uint32_t rv = digitalRead(ENCODER_BTN) ? 0x10 : 0;
 	rv +=  digitalRead(ENCODER_DT) ? 0x20 : 0;
 	rv +=  digitalRead(ENCODER_CLK) ? 0x40 : 0;
 	return rv;

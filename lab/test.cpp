@@ -1,7 +1,7 @@
 #include <wiringPi.h>
 #include <stdio.h>
 typedef unsigned long uint32_t;
-typedef unsigned char uint8c_t;
+typedef unsigned char uint8_t;
 
 // GPIO pin defs
 #define LEDG 22          

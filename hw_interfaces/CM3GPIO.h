@@ -51,6 +51,7 @@ class CM3GPIO
         uint32_t shiftRegRead();
         void getEncoder();
         void getKeys();
+        uint32_t readEncoder();
         uint32_t adcRead(uint8_t adcnum);
         void displayPinValues();
 	void checkFootSwitch ();
