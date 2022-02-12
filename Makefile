@@ -27,9 +27,9 @@ organelle_m : CXXFLAGS += -DCM3GPIO_HW -DMICSEL_SWITCH -DPWR_SWITCH -DOLED_30FPS
 organelle_m : $(objects) hw_interfaces/CM3GPIO.o
 	$(CXX) -l wiringPi -o fw_dir/mother $(objects) hw_interfaces/CM3GPIO.o
 
-barbonelle : CXXFLAGS += -DCM3GPIO_HW -DPWR_SWITCH   -DFIX_ABL_LINK
+barbonelle : CXXFLAGS += -DCM3GPIO_HW -DPWR_SWITCH -DFIX_ABL_LINK
 barbonelle : $(objects) hw_interfaces/CM3GPIO.o hw_interfaces/ssd1306_i2c.o
-	$(CXX) -l wiringPi -o fw_dir/mother $(objects) hw_interfaces/CM3GPIO.o hw_interfaces/ssd1306_i2c.o
+	$(CXX) -o fw_dir/mother $(objects) hw_interfaces/CM3GPIO.o hw_interfaces/ssd1306_i2c.o -l wiringPi 
 
 .PHONY : clean
 

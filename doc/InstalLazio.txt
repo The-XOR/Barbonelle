@@ -38,6 +38,7 @@ sudo raspi-config:
     - Disable wait for network at boot
   3. Interface Options:
     - abilitare SSH
+    - abilirare I2C
   5. Localization Options
 .   - Locale: en US UTF8-UTF8
     - Timezone
@@ -132,10 +133,7 @@ Dopo il reboot, di nuovo:
 
 systemctl disable hciuart.service
 systemctl disable vncserver-x11-serviced.service
-systemctl disable dnsmasq.service
 systemctl disable hostapd.service
-systemctl disable dhcpcd.service
-systemctl disable wpa_supplicant.service
 
 sudo nano /etc/security/limits.conf 
 
@@ -157,3 +155,26 @@ dopodiche'
     timedatectl set-ntp false
     sudo apt-get autoremove --purge
 
+# compilazio barbonellis:
+   cd ORGANELLE_OS/
+   sudo make barbonelle_deploy
+    
+
+# update patches
+        
+    cd /sdcard/
+    git clone https://github.com/critterandguitari/Organelle_Patches.git Patches --depth=1
+    rm -fr Patches/.git
+    rm -f Patches/.gitignore 
+    rm -f Patches/README.md 
+   
+
+systemctl disable dnsmasq.service
+systemctl disable dhcpcd.service
+systemctl disable wpa_supplicant.service
+
+######## per rimontare la sdcard in modalita' R/W:
+    cd 
+    sudo fw_dir/scripts/remount-rw.sh 
+ 
+ 
