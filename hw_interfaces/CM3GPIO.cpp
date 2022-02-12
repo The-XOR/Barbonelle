@@ -154,9 +154,9 @@ void CM3GPIO::init(){
     pinMode(ENCODER_BTN, INPUT);
     pinMode(ENCODER_DT, INPUT);
     pinMode(ENCODER_CLK, INPUT);
-    pullUpDnControl(ENCODER_BTN, PUD_UP);
-    pullUpDnControl(ENCODER_DT, PUD_UP);
-    pullUpDnControl(ENCODER_CLK, PUD_UP);
+    pullUpDnControl(ENCODER_BTN, PUD_DOWN);
+    pullUpDnControl(ENCODER_DT, PUD_DOWN);
+    pullUpDnControl(ENCODER_CLK, PUD_DOWN);
 
 
     ssd1306_begin(SSD1306_SWITCHCAPVCC, SSD1306_I2C_ADDRESS);
@@ -186,8 +186,8 @@ void CM3GPIO::init(){
 uint32_t CM3GPIO::readEncoder()
 {
 	uint32_t rv = digitalRead(ENCODER_BTN) ? 0x10 : 0;
-	rv +=  digitalRead(ENCODER_DT) ? 0x20 : 0;
 	rv +=  digitalRead(ENCODER_CLK) ? 0x40 : 0;
+	rv +=  digitalRead(ENCODER_DT) ? 0x20 : 0;
 	return rv;
 }
 
@@ -427,7 +427,7 @@ void CM3GPIO::getKeys(void){
     keyStates = ~keyStates;
 }
 
-void getEncoder(uint32_t pinValues)
+void CM3GPIO::getEncoder()
 {
 	static uint8_t encoder_last = 0;
 

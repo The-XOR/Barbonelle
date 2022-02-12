@@ -5,3 +5,6 @@ UpdateOS*.zip
 *.pyc
 fw_dir/mother
 tmp
+lab/*.o
+lab/*.out
+
