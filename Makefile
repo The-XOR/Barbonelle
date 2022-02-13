@@ -75,7 +75,7 @@ organelle_m_deploy : organelle_m
 	sync
 
 barbonelle_deploy : barbonelle
-	@echo "Updating OS to $(IMAGE_VERSION)"
+	@echo "Updating The Barbonelle OS to $(IMAGE_VERSION)"
 	@echo "copying common fw files"
 	rm -fr /home/music/fw_dir
 	mkdir /home/music/fw_dir
