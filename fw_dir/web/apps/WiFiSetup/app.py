@@ -7,7 +7,7 @@ import urllib
 import time
 import socket
 from cherrypy.lib import static
-import imp
+import importlib
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 

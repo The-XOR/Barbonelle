@@ -1,7 +1,7 @@
 import time
 import RPi.GPIO as GPIO
 import os
-import imp
+import importlib
 
 fw_dir = os.getenv("FW_DIR")
 

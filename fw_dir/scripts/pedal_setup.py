@@ -1,6 +1,6 @@
 import os
 import subprocess
-import imp
+import importlib
 import sys
 import time
 import threading
@@ -104,7 +104,7 @@ def ExprMinSelect():
                 og.println(2,str(exprMin))
                 og.flip()
             elif (og.enc_but_flag and og.enc_but==1):
-                print exprMin
+                print(exprMin)
                 menu.items[menu.selection][0] = 'Expr Min : ' + str(exprMin)
                 break
 
@@ -129,7 +129,7 @@ def ExprMaxSelect():
                 og.println(2,str(exprMax))
                 og.flip()
             elif (og.enc_but_flag and og.enc_but==1):
-                print exprMax
+                print(exprMax)
                 menu.items[menu.selection][0] = 'Expr Max : ' + str(exprMax)
                 break
 
@@ -154,7 +154,7 @@ def SwitchModeSelect():
                 og.println(2,switchType(switchMode))
                 og.flip()
             elif (og.enc_but_flag and og.enc_but==1):
-                print switchMode
+                print(switchMode)
                 menu.items[menu.selection][0] = 'Switch : ' + switchType(switchMode)
                 break
 

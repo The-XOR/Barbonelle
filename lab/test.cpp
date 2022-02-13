@@ -91,9 +91,9 @@ int main()
     pinMode(ENCODER_BTN, INPUT);
     pinMode(ENCODER_DT, INPUT);
     pinMode(ENCODER_CLK, INPUT);
-    pullUpDnControl(ENCODER_BTN, PUD_UP);
-    pullUpDnControl(ENCODER_DT, PUD_UP);
-    pullUpDnControl(ENCODER_CLK, PUD_UP);
+    pullUpDnControl(ENCODER_BTN, PUD_DOWN);
+    pullUpDnControl(ENCODER_DT, PUD_DOWN);
+    pullUpDnControl(ENCODER_CLK, PUD_DOWN);
 
     puts("press encoder key");
 	int sum =0;

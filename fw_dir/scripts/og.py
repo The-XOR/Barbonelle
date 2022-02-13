@@ -53,9 +53,9 @@ def flip() :
 
 def init_osc() :
     global osc_server, osc_target
-    print "config osc target"
+    print("config osc target")
     osc_target = liblo.Address(4001)
-    print "config osc osc_server"
+    print("config osc osc_server")
     # make sure the port is available... ahh ok
     os.system("fuser -k 4002/udp")
     try:
@@ -63,10 +63,10 @@ def init_osc() :
         osc_server.add_method("/encoder/turn", 'i', enc_turn)
         osc_server.add_method("/encoder/button", 'i', enc_press)
 
-    except liblo.ServerError, err:
-        print str(err)
+    except liblo.ServerError as err:
+        print(str(err))
         sys.exit()
-    print "done config osc_server"
+    print("done config osc_server")
 
 def enc_turn(path, args) :
     global enc_turn_flag, enc_turn

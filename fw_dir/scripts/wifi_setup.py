@@ -1,5 +1,5 @@
 import os
-import imp
+import importlib
 import sys
 import time
 import threading
@@ -44,7 +44,7 @@ class WifiNet :
         og.redraw_flag = True
 
 def disconnect():
-    print "wifi disconnect all"
+    print("wifi disconnect all")
     wifi.disconnect_all()
     update_menu()
     og.redraw_flag = True
@@ -73,25 +73,25 @@ def check_vnc():
     return ret
 
 def start_web():
-    print "start web"
+    print("start web")
     wifi.start_web_server()
     update_menu()
     og.redraw_flag = True
 
 def stop_web():
-    print "stop web"
+    print("stop web")
     wifi.stop_web_server()
     update_menu()
     og.redraw_flag = True
 
 def start_ap():
-    print "start ap"
+    print("start ap")
     wifi.start_ap_server()
     update_menu()
     og.redraw_flag = True
 
 def stop_ap():
-    print "stop ap"
+    print("stop ap")
     wifi.stop_ap_server()
     update_menu()
     og.redraw_flag = True
@@ -208,7 +208,7 @@ wifi_file = user_dir + "/wifi.txt"
 if os.path.exists(wifi_file):
     f = open(user_dir + "/wifi.txt", "r")
 else :
-    print "wifi file not found, creating"
+    print("wifi file not found, creating")
     f = open(user_dir + "/wifi.txt", "w")
     f.write("Network Name\n")
     f.write("password\n")
@@ -230,7 +230,7 @@ try :
             menu.items.append([' - ' + ssid, net.connect, {'type':'net', 'ssid':ssid}]) # stash some extra info with these net entries
 except : 
     error_wifi_file()
-    print "bad wifi file" 
+    print("bad wifi file") 
 
 menu.items.append(['Start Web Server', non, {'type':'web_server_control'}])
 menu.items.append(['Start AP', non, {'type':'ap_control'}])
