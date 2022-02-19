@@ -24,7 +24,7 @@ function refreshWorkingDir(){
         console.log('problem refreshing');
         // if that was an attempt to load non existent sdcard folder set base back to usbdrive
         if (workingDir == '/sdcard/') {
-            alertDialog('SD Card storage not available on this Organelle.');
+            alertDialog('SD Card storage not available on this Barbonelle.');
             workingDir = '/usbdrive/';
             baseDirLabel = 'USB Drive';
         }

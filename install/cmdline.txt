@@ -1,0 +1,2 @@
+console=serial0,115200 console=tty1 root=PARTUUID=47fea68b-02 rootfstype=ext4 fsck.repair=skip rootwait fastboot noswap ro
+

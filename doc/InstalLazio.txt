@@ -12,6 +12,8 @@ pin 6 (BCM6) -> encoder DT
 pin 3 (BCM7) -> encoder CLK
 Il positivo dell'encoder va alimentato a 3.3V
 
+pin 11 (BCM17) -> shutdown Button
+
 The operating system for the BARBONELLE synthesizer device - remixed for barbons
 
 Il pulsante PiSound e' su GPIO 17 (Pin 11, Wiring Pi pin 0).
@@ -35,6 +37,8 @@ e creare una ulteriore partizione ext4 utilizzando tutto lo spazio rimasto nella
 
 Togliere la scheda dal raspoberro e formattarla (nel pc) come ext4 label = sdcard
 A cus punt, installare lo kernel realtime appositamente compilato dal semper voster.
+copiare install/config.txt in /boot
+
 
 Continuiamo a preparare il filesystem:
 sudo chmod +xr /root
@@ -169,11 +173,39 @@ sudo apt-get autoremove --purge
     rm -f Patches/.gitignore 
     rm -f Patches/README.md 
    
-
+# da qui in poi, la waifai non funzionera' piu. quindi.... OCIO!
 sudo systemctl disable dnsmasq.service
 sudo systemctl disable dhcpcd.service
 sudo systemctl disable wpa_supplicant.service
 sudo systemctl daemon-reload
+
+# rendere la essedicard read only:
+    - copiare install/cmdline.txt in /boot
+
+
+    rm -rf /var/spool
+    ln -s /tmp /var/spool
+
+    sudo nano /etc/ssh/sshd_config ed aggiungere:
+        UsePrivilegeSeparation no
+
+    sudo nano  /usr/lib/tmpfiles.d/var.conf 
+        replace "spool 0755" with "spool 1777"
+
+    touch /tmp/dhcpcd.resolv.conf
+    rm /etc/resolv.conf
+    ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf
+        
+    sudo nano /etc/fstab 
+    - add "ro" to /boot 
+    - add "ro" to /
+
+    - add the lines:
+        tmpfs /var/log tmpfs nodev,nosuid 0 0
+        tmpfs /var/tmp tmpfs nodev,nosuid 0 0
+        tmpfs /tmp     tmpfs nodev,nosuid 0 0
+    reboot
+
 
 ######## per rimontare la sdcard in modalita' R/W:
     cd 
