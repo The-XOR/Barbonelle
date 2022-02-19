@@ -36,7 +36,7 @@ class Root(object):
         return """
 <html>
 <head>
-<title>Organelle Info</title>
+<title>Barbonelle Info</title>
 <link rel="stylesheet" href="/static/bootstrap.min.css">
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 </head>

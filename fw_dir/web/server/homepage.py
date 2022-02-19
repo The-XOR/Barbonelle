@@ -34,7 +34,7 @@ class Root(object):
         return """
 <html>
 <head>
-<title>Organelle Home</title>
+<title>Barbonelle Home</title>
 <link rel="stylesheet" href="/static/bootstrap.min.css">
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 </head>
@@ -46,7 +46,7 @@ class Root(object):
 
 <div style="border:1px solid; border-radius: 6px; padding: 16px; width: 500px; margin:16px auto;">
 
-<h3>Organelle<h3>
+<h3>Barbonelle<h3>
 
 """ + self.links + """
 </div>

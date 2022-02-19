@@ -15,7 +15,7 @@ if [ -f "$AP_FILE" ]; then
     PW=$(tail -n 1 $AP_FILE)
 else 
     echo "$AP_FILE does not exist, using default"
-    NET=Organelle
+    NET=Barbonelle
     PW=coolmusic
 fi
 

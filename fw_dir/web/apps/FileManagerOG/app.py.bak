@@ -3,7 +3,7 @@ import time
 import glob
 import json
 import cherrypy
-import urllib.request, urllib.parse, urllib.error
+import urllib
 import time
 import socket
 from cherrypy.lib import static
@@ -32,7 +32,7 @@ class Root():
 
     def tester(self, name):
         return "TESTdf"
-        print("cool")
+        print "cool"
     tester.exposed = True
 
     def flash(self):
@@ -77,7 +77,7 @@ class Root():
                     break
                 size += len(data)
                 newfile.write(data)
-        print("saved file, size: " + str(size))
+        print "saved file, size: " + str(size)
         p, ext = os.path.splitext(filepath)
         cherrypy.response.headers['Content-Type'] = "application/json"
         return '{"files":[{"name":"x","size":'+str(size)+',"url":"na","thumbnailUrl":"na","deleteUrl":"na","deleteType":"DELETE"}]}'

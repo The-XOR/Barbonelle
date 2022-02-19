@@ -16,12 +16,15 @@ The operating system for the BARBONELLE synthesizer device - remixed for barbons
 
 Il pulsante PiSound e' su GPIO 17 (Pin 11, Wiring Pi pin 0).
 
+Se serve connettersi a Barbonelle in AP mode, la password e' 
+coolmusic mentre la network creata e'  Barbonelle
+
 ########### Installazione da barboni ###########
 
 Scaricare raspbian con lite
 PRIMA (e sottolineo il PRIMA) di inzepparlo del raspoberro:
 
-   sudo nano /run/media/io/rootfs/usr/lib/raspi-config/init_resize.h
+   sudo nano /run/media/$USER/rootfs/usr/lib/raspi-config/init_resize.h
    cambiare la linea
       ROOT_DEV_SIZE=$(cat "/sys/block/${ROOT_DEV_NAME}/size")
    in
@@ -29,6 +32,25 @@ PRIMA (e sottolineo il PRIMA) di inzepparlo del raspoberro:
 quindi... procedere. Questo fara' in modo che la partizione root sia di circa 4 gigaspazi.
 Una volta che il raspoberro ha resizato a dovere la partizione root, arimettere la sdcard nel PC
 e creare una ulteriore partizione ext4 utilizzando tutto lo spazio rimasto nella SD.
+
+Togliere la scheda dal raspoberro e formattarla (nel pc) come ext4 label = sdcard
+A cus punt, installare lo kernel realtime appositamente compilato dal semper voster.
+
+Continuiamo a preparare il filesystem:
+sudo chmod +xr /root
+sudo mkdir /sdcard
+sudo chown music:music /sdcard
+sudo mkdir /usbdrive
+sudo chown music:music /usbdrive
+
+sudo nano /etc/fstab 
+aggiungere la linea:
+    /dev/mmcblk0p3 /sdcard  ext4 defaults,noatime 0 0
+
+quindi eseguire un reboot
+Dopo il reboot, di nuovo:
+    sudo chown music:music /sdcard
+
 
 sudo raspi-config: 
   1. System Options:
@@ -38,7 +60,8 @@ sudo raspi-config:
     - Disable wait for network at boot
   3. Interface Options:
     - abilitare SSH
-    - abilirare I2C
+    - abilitare I2C
+    - abilitare VNC
   5. Localization Options
 .   - Locale: en US UTF8-UTF8
     - Timezone
@@ -70,35 +93,31 @@ poweroff
 
 install git
 
-    apt-get install git
+    apt-get install git iptables
 
 configure
 
     git config --global user.email "..."
     git config --global user.name "..."
 
-git clone https://github.com/The-XOR/Barbonelle.git ORGANELLE_OS --depth=1
-cd ORGANELLE_OS
+git clone https://github.com/The-XOR/Barbonelle.git Organelle_OS --depth=1
+cd Organelle_OS
 
 # install packages 
     
 sudo apt-get install -y zip jwm xinit x11-utils x11-xserver-utils lxterminal pcmanfm adwaita-icon-theme gnome-themes-standard gtk-theme-switch conky libasound2-dev liblo-dev liblo-tools mpg123 dnsmasq hostapd
 sudo apt-get install -y python3-pip 
 
-# VUENNECI 
-  sudo raspi-config
-  abilitare VNC
-
 # python stuff 
 
-    pip install Cython
-    pip install pyliblo
-    pip install cherrypy
+ python3 -m pip install Cython
+ python3 -m pip install cherrypy
+ python3 -m pip install pyliblo
        
 # install wiringpi
-    cd /home/music/ORGANELLE_OS/install
-    unzip WiringPi.zip
-    cd WiringPi-master
+    cd /home/music/Organelle_OS/install
+    unzip wiringPi.zip
+    cd wiringPi
     sudo ./build
 
 sudo apt-get install -y puredata-core luarocks csound supercollider
@@ -108,34 +127,7 @@ sudo apt-get install -y puredata-core luarocks csound supercollider
     curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
     sudo apt-get install -y nodejs
 
-# Ora lanciare startx, aprire una finestra bash  e lanciare:
-   gtk-theme-switch2 /usr/share/themes/Adwaita
-
-   fix circle icon not showing up in Pd (tcl/tk doesn't like the adwaita circle icon for some reason, so just rename it to force fallback)
-
-    sudo mv /usr/share/icons/Adwaita/cursors/circle /usr/share/icons/Adwaita/cursors/circleORIG
-
-
-######## E adesso, un po' di amore per il file system.
-sudo chmod +xr /root
-sudo mkdir /sdcard
-sudo chown music:music /sdcard
-sudo mkdir /usbdrive
-sudo chown music:music /usbdrive
-
-sudo nano /etc/fstab 
-aggiungere la linea:
-    /dev/mmcblk0p3 /sdcard  ext4 defaults,noatime 0 0
-
-quindi eseguire un reboot
-Dopo il reboot, di nuovo:
-    sudo chown music:music /sdcard 
-
-systemctl disable hciuart.service
-systemctl disable vncserver-x11-serviced.service
-systemctl disable hostapd.service
-
-sudo nano /etc/security/limits.conf 
+sudo nano /etc/security/limits.conf
 
 Aggiungere alla fine le linee:
 
@@ -143,20 +135,29 @@ Aggiungere alla fine le linee:
     @music - memlock unlimited
     @music - nice -10
 
-sudo nano /etc/systemd/system.conf 
+sudo nano /etc/systemd/system.conf
 
 Aggiungere le linee:
 
     DefaultTimeoutStartSec=10s
     DefaultTimeoutStopSec=5s
 
-dopodiche'
-    sudo systemctl daemon-reload
-    timedatectl set-ntp false
-    sudo apt-get autoremove --purge
+sudo timedatectl set-ntp false
+
+sudo systemctl disable hciuart.service
+sudo systemctl disable vncserver-x11-serviced.service
+sudo systemctl disable hostapd.service
+sudo systemctl daemon-reload
+sudo apt-get autoremove --purge
+
+# Ora lanciare startx, aprire una finestra bash  e lanciare:
+   gtk-theme-switch2 /usr/share/themes/Adwaita
+
+# fix circle icon not showing up in Pd (tcl/tk doesn't like the adwaita circle icon for some reason, so just rename it to force fallback)
+    sudo mv /usr/share/icons/Adwaita/cursors/circle /usr/share/icons/Adwaita/cursors/circleORIG
 
 # compilazio barbonellis:
-   cd ORGANELLE_OS/
+   cd Organelle_OS/
    sudo make barbonelle_deploy
     
 
@@ -169,9 +170,10 @@ dopodiche'
     rm -f Patches/README.md 
    
 
-systemctl disable dnsmasq.service
-systemctl disable dhcpcd.service
-systemctl disable wpa_supplicant.service
+sudo systemctl disable dnsmasq.service
+sudo systemctl disable dhcpcd.service
+sudo systemctl disable wpa_supplicant.service
+sudo systemctl daemon-reload
 
 ######## per rimontare la sdcard in modalita' R/W:
     cd 

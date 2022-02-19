@@ -15,7 +15,7 @@ def edit_ap(name, pw):
     if os.path.exists(ap_file):
         f = open(user_dir + "/ap.txt", "r")
     else :
-        print("wifi file not found, creating")
+        print "wifi file not found, creating"
         f = open(user_dir + "/ap.txt", "w")
         f.close()
 
@@ -36,11 +36,11 @@ def delete_network(name):
     f = open(user_dir + "/wifi.txt", "r")
     lines = f.readlines()
     f.close()
-    print(name)
+    print name
     for i in range(len(lines)):
-        print(lines[i])
+        print lines[i]
         if lines[i].rstrip() == name :
-            print("MATHC")
+            print "MATHC"
             del lines[i:i+2]
             break
 
@@ -61,7 +61,7 @@ def get_networks():
     if os.path.exists(wifi_file):
         f = open(user_dir + "/wifi.txt", "r")
     else :
-        print("wifi file not found, creating")
+        print "wifi file not found, creating"
         f = open(user_dir + "/wifi.txt", "w")
         #f.write("\n")
         #f.write("\n")
@@ -77,7 +77,7 @@ def get_networks():
                 network_names += [{'name': ssids[i]}]
                 ssid = ssids[i]
     except : 
-        print("bad wifi file") 
+        print "bad wifi file" 
 
     return json.dumps(network_names, indent=4, encoding='utf-8')
 
