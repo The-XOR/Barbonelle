@@ -39,131 +39,34 @@ Togliere la scheda dal raspoberro e formattarla (nel pc) come ext4 label = sdcar
 A cus punt, installare lo kernel realtime appositamente compilato dal semper voster.
 copiare install/config.txt in /boot
 
+Infine, copiare la cartella install in /home/pi. A cus punt, si continua sul raspoberro.
 
-Continuiamo a preparare il filesystem:
-sudo chmod +xr /root
-sudo mkdir /sdcard
-sudo chown music:music /sdcard
-sudo mkdir /usbdrive
-sudo chown music:music /usbdrive
+-----------------
 
-sudo nano /etc/fstab 
-aggiungere la linea:
-    /dev/mmcblk0p3 /sdcard  ext4 defaults,noatime 0 0
+- Eseguire 0.sh
+- Eseguire 1.sh
 
-quindi eseguire un reboot
-Dopo il reboot, di nuovo:
-    sudo chown music:music /sdcard
+- logout, login as root
+    Creare user 'music':
+    usermod -l music -d /home/music -m pi
+    groupmod --new-name music pi
+    logout, quindi login as music
 
 
 sudo raspi-config: 
   1. System Options:
     - configurare WLAN
-    - Change password: music
-    - Network > Hostname: barbonelle
-    - Disable wait for network at boot
-  3. Interface Options:
-    - abilitare SSH
-    - abilitare I2C
-    - abilitare VNC
-  5. Localization Options
-.   - Locale: en US UTF8-UTF8
+  2. Localization Options
+    - Locale: en US UTF8-UTF8
     - Timezone
-    - WLAN Country
-
 --- Exit, Reboot
+
+- Eseguire 3.sh
                                      
-relogin (attenzione: ora la password è music)
-sudo apt-get update
-sudo apt-get upgrade -y
-sudo reboot
-
-creare utente "music":
-
-1  `sudo passwd root`  --> cambiare la password in "root" (!)
-2. logout, login as root
-Creare user 'music':
-  usermod -l music -d /home/music -m pi
-  groupmod --new-name music pi
-
-logout, quindi login as music
-
-disable need for passwd with sudo:
-sudo passwd -l root
-sudo nano /etc/sudoers.d/010_pi-nopasswd
-change 'pi' to 'music'
-- con raspi-config, abilitare console autologin
-poweroff
-
-install git
-
-    apt-get install git iptables
-
-configure
-
-    git config --global user.email "..."
-    git config --global user.name "..."
-
-git clone https://github.com/The-XOR/Barbonelle.git Organelle_OS --depth=1
-cd Organelle_OS
-
-# install packages 
-    
-sudo apt-get install -y zip jwm xinit x11-utils x11-xserver-utils lxterminal pcmanfm adwaita-icon-theme gnome-themes-standard gtk-theme-switch conky libasound2-dev liblo-dev liblo-tools mpg123 dnsmasq hostapd
-sudo apt-get install -y python3-pip 
-
-# python stuff 
-
- python3 -m pip install Cython
- python3 -m pip install cherrypy
- python3 -m pip install pyliblo
-       
-# install wiringpi
-    cd /home/music/Organelle_OS/install
-    unzip wiringPi.zip
-    cd wiringPi
-    sudo ./build
-
-sudo apt-get install -y puredata-core luarocks csound supercollider
-
-# instalazione di nodejs
-
-    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
-    sudo apt-get install -y nodejs
-
-sudo nano /etc/security/limits.conf
-
-Aggiungere alla fine le linee:
-
-    @music - rtprio 99
-    @music - memlock unlimited
-    @music - nice -10
-
-sudo nano /etc/systemd/system.conf
-
-Aggiungere le linee:
-
-    DefaultTimeoutStartSec=10s
-    DefaultTimeoutStopSec=5s
-
-sudo timedatectl set-ntp false
-
-sudo systemctl disable hciuart.service
-sudo systemctl disable vncserver-x11-serviced.service
-sudo systemctl disable hostapd.service
-sudo systemctl daemon-reload
-sudo apt-get autoremove --purge
+- Eseguire 4.sh
 
 # Ora lanciare startx, aprire una finestra bash  e lanciare:
    gtk-theme-switch2 /usr/share/themes/Adwaita
-
-# fix circle icon not showing up in Pd (tcl/tk doesn't like the adwaita circle icon for some reason, so just rename it to force fallback)
-    sudo mv /usr/share/icons/Adwaita/cursors/circle /usr/share/icons/Adwaita/cursors/circleORIG
-
-# compilazio barbonellis:
-   cd Organelle_OS/
-   sudo make barbonelle_deploy
-    
 
 # update patches
         
@@ -178,37 +81,3 @@ sudo systemctl disable dnsmasq.service
 sudo systemctl disable dhcpcd.service
 sudo systemctl disable wpa_supplicant.service
 sudo systemctl daemon-reload
-
-# rendere la essedicard read only:
-    - copiare install/cmdline.txt in /boot
-
-
-    rm -rf /var/spool
-    ln -s /tmp /var/spool
-
-    sudo nano /etc/ssh/sshd_config ed aggiungere:
-        UsePrivilegeSeparation no
-
-    sudo nano  /usr/lib/tmpfiles.d/var.conf 
-        replace "spool 0755" with "spool 1777"
-
-    touch /tmp/dhcpcd.resolv.conf
-    rm /etc/resolv.conf
-    ln -s /tmp/dhcpcd.resolv.conf /etc/resolv.conf
-        
-    sudo nano /etc/fstab 
-    - add "ro" to /boot 
-    - add "ro" to /
-
-    - add the lines:
-        tmpfs /var/log tmpfs nodev,nosuid 0 0
-        tmpfs /var/tmp tmpfs nodev,nosuid 0 0
-        tmpfs /tmp     tmpfs nodev,nosuid 0 0
-    reboot
-
-
-######## per rimontare la sdcard in modalita' R/W:
-    cd 
-    sudo fw_dir/scripts/remount-rw.sh 
- 
- 
